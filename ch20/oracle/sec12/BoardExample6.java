@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class BoardExample5 {
+public class BoardExample6 {
 	
 	
 	// Field
@@ -15,7 +15,7 @@ public class BoardExample5 {
 		private Connection conn;
 		
 		// Constructor
-		public BoardExample5() {
+		public BoardExample6() {
 			try {
 				Class.forName("oracle.jdbc.OracleDriver");
 				
@@ -118,9 +118,6 @@ public class BoardExample5 {
 					exit();
 				}
 			}
-			
-			
-			
 			list();
 		}
 		
@@ -151,17 +148,66 @@ public class BoardExample5 {
 					System.out.println("내용: " + board.getBcontent());
 					System.out.println("작성자: " + board.getBwriter());
 					System.out.println("날짜: " + board.getBdate());
-					System.out.println("#####################");
+					System.out.println("----------------------------");
+					System.out.println("보조 메뉴 : 1.Update | 2.Delete | 3.List");
+					System.out.print("메뉴 선택: ");
+					String menuNo = sc.nextLine();
+					System.out.println();
+					
+					if(menuNo.equals("1")) {
+						update(board);
+					}else if(menuNo.equals("2")) {
+						delete(board);
+					}
 				}
-				rs.close();
-				pstmt.close();
-				} catch (Exception e) {
-				e.printStackTrace();
-				exit();
+					rs.close();
+					pstmt.close();
+				}catch (Exception e) {
+					e.printStackTrace();
+					exit();
+				}
+				
+				//게시물 목록 출력
+				list();
 			}
-			
+				
+				public void update(Board board) {
+					System.out.println("[수정 내용 입력]");
+					System.out.println("제목: ");
+					board.setBtitle(sc.nextLine());
+					System.out.println("내용: ");
+					board.setBcontent(sc.nextLine());
+					System.out.println("작성자: ");
+					board.setBwriter(sc.nextLine());
+					
+					System.out.println("--------------------------------------------------------");
+					System.out.println("보조 메뉴: 1.Ok | 2.Cancel");
+					System.out.print("메뉴 선택: ");
+					String menuNo = sc.nextLine();
+					if(menuNo.equals("1")) {
+						try {
+						String sql = ""+
+								"UPDATE boards SET btitle=? , bcontent=?, bwriter=? " +
+								"WHERE bno=?";
+						PreparedStatement pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, board.getBtitle());
+						pstmt.setString(2, board.getBcontent());
+						pstmt.setString(3, board.getBwriter());
+						pstmt.setInt(4, board.getBno());
+						pstmt.executeUpdate();
+						pstmt.close();
+					}catch (Exception e) {
+						e.printStackTrace();
+						exit();
+					}
+					
+					}
 			list();
 		}
+		public void delete(Board board) {
+					System.out.println("*** delete() 메소드 실행됨");
+					list();
+				}
 		
 		private void clear() {
 			System.out.println("*** clear()메소드 실행됨");
@@ -173,8 +219,9 @@ public class BoardExample5 {
 		}
 		
 		public static void main(String[] args) {
-			BoardExample5 boardExample = new BoardExample5();
+			BoardExample6 boardExample = new BoardExample6();
 			boardExample.list();
 			
+
 		}
 }

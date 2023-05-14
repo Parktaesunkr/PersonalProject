@@ -1,4 +1,4 @@
-package ch20.oracle.sec12;
+package PersonalProject.ch20.oracle.sec12;
 
 import java.util.Date;
 import lombok.Data;
